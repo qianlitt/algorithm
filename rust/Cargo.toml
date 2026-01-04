@@ -2,6 +2,7 @@ bin = [
 { name = "leet-1", path = "src/leetcode/1.rs" },
 { name = "leet-13", path = "src/leetcode/13.rs" },
 { name = "leet-169", path = "src/leetcode/169.rs" },
+{ name = "leet-1486", path = "src/leetcode/1486.rs" },
 ]
 
 [package]
