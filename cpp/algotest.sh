@@ -1,5 +1,20 @@
 #!/usr/bin/env bash
 
+###
+### algotest.sh - 管理并运行测试
+###
+### 只能在特定目录下运行
+###
+### Usage:
+###     algotest.sh [OPTIONS] [COMMAND]...
+###
+### Commands:
+###     408 <chapter>/<question>    运行408题目的测试
+###     leet <question>             运行LeetCode题目的测试
+###     new                         创建新题目文件（交互式）
+###     clean                       清理构建文件
+###     --help, -h                  显示帮助信息
+
 CXX="clang++"
 CXXFLAGS="-std=c++23 -Wall -Wno-deprecated -O2 -I./include"
 
@@ -15,6 +30,12 @@ SRC_408_DIR="${SRC_DIR}/408"
 BIN_408_DIR="${BIN_DIR}/408"
 SRC_LEETCODE_DIR="${SRC_DIR}/leetcode"
 BIN_LEETCODE_DIR="${BIN_DIR}/leetcode"
+
+# === utils ===
+
+help() {
+    awk -F'### ' '/^###/ { print $2 }' "$0"
+}
 
 handle_408_question() { # 408 题目字符串拆分
     local input=$1
@@ -51,17 +72,26 @@ creat_file() {
         handle_408_question $question
 
         mkdir -p $SRC_408_DIR/chapter$chapter
+        echo "create file: $SRC_408_DIR/chapter$chapter/$question.cpp"
         cp $TEMPLATE_DIR/408-template.cpp $SRC_408_DIR/chapter$chapter/$question.cpp
         ;;
     2)
-        cp $TEMPLATE_DIR/$leetcode-template.cpp $SRC_LEETCODE_DIR/$question.cpp
+        mkdir -p $SRC_LEETCODE_DIR
+        echo "create file: $SRC_LEETCODE_DIR/$question.cpp"
+        cp $TEMPLATE_DIR/leetcode-template.cpp $SRC_LEETCODE_DIR/$question.cpp
         ;;
     esac
 }
+
+# === main ===
 
 case $1 in
 408) test_408 $2 ;;
 leet) test_leetcode $2 ;;
 new) creat_file ;;
 clean) rm -rf $BUILD_DIR ;;
+install) install_script ;;
+uninstall) uninstall_script ;;
+--help | -h) help ;;
+*) help ;;
 esac
